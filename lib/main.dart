@@ -1,10 +1,16 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:uitemplate/ui_pack/responsive_scaffold.dart';
 
+
+
 void main() {
   runApp(MyApp());
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 }
-
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) {
+  print("BACKGROUND HANDLER");
+}
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -27,7 +33,27 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Future<void> initializeApp() async {
+    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification?.android;
+      print("Message : ${notification.title}");
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      print("MESSAGE OPENED :${event.notification.title}");
+    });
 
+  }
+  @override
+  void initState() {
+    initializeApp();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return ResponsiveScaffold(
