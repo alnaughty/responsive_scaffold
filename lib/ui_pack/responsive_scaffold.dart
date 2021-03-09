@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:uitemplate/ui_pack/children/drawer_item.dart';
 
 class ResponsiveScaffold extends StatefulWidget {
   BuildContext context;
   final Widget title;
   Color backgroundColor = Colors.white;
   Color drawerBackgroundColor = Colors.white.withOpacity(0.8);
-  final List<Map<dynamic,dynamic>> drawerItems;
+  final List<DrawerItem> drawerItems;
   Widget body = Container(
     color: Colors.white,
   );
@@ -23,7 +24,8 @@ class _ResponsiveScaffoldState extends State<ResponsiveScaffold> {
   double dragStartAt = 0.0;
   bool showDrawerText = true;
   bool _showDrawer = false;
-
+  DrawerItem _selectedDrawerItem;
+  Widget _selectedContent;
   GlobalKey<ScaffoldState> _key = new GlobalKey<ScaffoldState>();
   void onUpdate(DragUpdateDetails details) {
     print(details.localPosition.direction);
@@ -60,6 +62,14 @@ class _ResponsiveScaffoldState extends State<ResponsiveScaffold> {
     if(mounted){
       setState(() {
         showDrawerText = drawerWidth == maximumDrawerWidth;
+        if(widget.drawerItems != null){
+          for(var item in widget.drawerItems){
+            if(item.content != null && item.subItems == null){
+              _selectedContent = item.content;
+              break;
+            }
+          }
+        }
       });
     }
     super.initState();
@@ -126,20 +136,71 @@ class _ResponsiveScaffoldState extends State<ResponsiveScaffold> {
                               Container(
                                 width: double.infinity,
                                 height: 60,
-                                padding: const EdgeInsets.symmetric(horizontal: 15),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Icon(item['icon'],),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Expanded(
-                                      child: Text("${item['title']}"),
-                                    )
-                                  ],
+                                child: MaterialButton(
+                                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                                  onPressed: item.subItems != null && item.subItems.length > 0 ? (){
+                                    setState(() {
+                                      if(_selectedDrawerItem == item){
+                                        _selectedDrawerItem = null;
+                                      }else{
+                                        _selectedDrawerItem = item;
+                                      }
+                                    });
+                                  } : item.content != null ? (){
+                                    setState(() {
+                                      _selectedContent = item.content;
+                                    });
+                                  } : null,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(item.icon,),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        child: Text("${item.text}"),
+                                      ),
+                                      if((item.subItems != null && item.subItems.length > 0))...{
+                                        Icon(_selectedDrawerItem == item ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down)
+                                      }
+                                    ],
+                                  ),
                                 ),
-                              )
+                              ),
+                              if((item.subItems != null && item.subItems.length > 0))...{
+                                for(var sub_items in item.subItems)...{
+                                  AnimatedContainer(
+                                      width: double.infinity,
+                                      height: _selectedDrawerItem == item ? 60 : 0,
+                                      duration: Duration(milliseconds: 100 * (item.subItems.indexOf(sub_items) + 1)),
+                                      child: MaterialButton(
+                                        onPressed: sub_items.content != null ? (){
+                                          setState(() {
+                                            _selectedContent  = sub_items.content;
+                                          });
+                                        } : null,
+                                        padding: const EdgeInsets.symmetric(horizontal: 35),
+                                        child: Row(
+                                          children: [
+                                            if(_selectedDrawerItem == item)...{
+                                              Icon(sub_items.icon),
+                                            },
+                                            if(sub_items.title != null)...{
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              Expanded(
+                                                child: Text(sub_items.title),
+                                              )
+                                            }
+                                          ],
+                                        ),
+                                      )
+                                  )
+                                }
+                              }
                             }
                           }
                         ],
@@ -228,34 +289,80 @@ class _ResponsiveScaffoldState extends State<ResponsiveScaffold> {
                                   Container(
                                     width: double.infinity,
                                     height: 60,
-                                    padding: EdgeInsets.symmetric(horizontal: showDrawerText ? 15 : 0),
                                     child: MaterialButton(
-                                      onPressed: (){},
+                                      padding: const EdgeInsets.symmetric(horizontal: 25),
+                                      onPressed: item.subItems != null && item.subItems.length > 0 ? (){
+                                        setState(() {
+                                          if(_selectedDrawerItem == item){
+                                            _selectedDrawerItem = null;
+                                          }else{
+                                            _selectedDrawerItem = item;
+                                          }
+                                        });
+                                      } : item.content != null ? (){
+                                        setState(() {
+                                          _selectedContent = item.content;
+                                        });
+                                      } : null,
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
-                                          Icon(item['icon'],),
+                                          Icon(item.icon,),
                                           if(showDrawerText)...{
                                             const SizedBox(
                                               width: 10,
                                             ),
                                             Expanded(
-                                              child: Text("${item['title']}"),
+                                              child: Text("${item.text}"),
                                             )
+                                          },
+                                          if((item.subItems != null && item.subItems.length > 0) && showDrawerText)...{
+                                            Icon(_selectedDrawerItem == item ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down)
                                           }
-
                                         ],
                                       ),
                                     ),
-                                  )
+                                  ),
+                                  if((item.subItems != null && item.subItems.length > 0) && showDrawerText)...{
+                                    for(var sub_items in item.subItems)...{
+                                      AnimatedContainer(
+                                        width: double.infinity,
+                                        height: _selectedDrawerItem == item ? 60 : 0,
+                                        duration: Duration(milliseconds: 100 * (item.subItems.indexOf(sub_items) + 1)),
+                                        child: MaterialButton(
+                                          onPressed: sub_items.content != null ? (){
+                                            setState(() {
+                                              _selectedContent  = sub_items.content;
+                                            });
+                                          } : null,
+                                          padding: const EdgeInsets.symmetric(horizontal: 35),
+                                          child: Row(
+                                            children: [
+                                              if(_selectedDrawerItem == item)...{
+                                                Icon(sub_items.icon),
+                                              },
+                                              if(sub_items.title != null)...{
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Expanded(
+                                                  child: Text(sub_items.title),
+                                                )
+                                              }
+                                            ],
+                                          ),
+                                        )
+                                      )
+                                    }
+                                  }
                                 }
                               ],
                             ),
                           )
                         },
                         Expanded(
-                          child: widget.body,
+                          child: _selectedContent
                         )
                       ],
                     ),

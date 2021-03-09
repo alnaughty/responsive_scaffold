@@ -1,5 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:uitemplate/ui_pack/children/drawer_item.dart';
+import 'package:uitemplate/ui_pack/children/sub_drawer_item.dart';
 import 'package:uitemplate/ui_pack/responsive_scaffold.dart';
 
 
@@ -39,6 +41,16 @@ class _MyHomePageState extends State<MyHomePage> {
       badge: true,
       sound: true,
     );
+    NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+    print("Notification Settings : $settings");
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification?.android;
@@ -59,17 +71,17 @@ class _MyHomePageState extends State<MyHomePage> {
     return ResponsiveScaffold(
       title: Text("TEST TITLE"),
       drawerItems: [
-        {
-          "icon" : Icons.home,
-          "title" : "Home"
-        },
-        {
-          "icon" : Icons.dashboard,
-          "title" : "Dashboard"
-        },{
-          "icon" : Icons.settings,
-          "title" : "Settings"
-        }
+        DrawerItem(icon: Icons.home, text: "Home",content: Container(color: Colors.red,)),
+        DrawerItem(icon: Icons.dashboard, text: "Dashboard", content: Container(color: Colors.green,)),
+        DrawerItem(icon: Icons.settings, text: "Settings"),
+        DrawerItem(
+            icon: Icons.person,
+            text: "Clients",
+            subItems: [
+              SubDrawerItems(icon: Icons.details, title: "Details",content: Container(color: Colors.blue,)),
+              SubDrawerItems(icon: Icons.event, title: "Tasks")
+            ]
+        )
       ],
       drawerBackgroundColor: Colors.grey[800],
       backgroundColor: Colors.white,
