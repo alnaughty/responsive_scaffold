@@ -28,7 +28,6 @@ class _ResponsiveScaffoldState extends State<ResponsiveScaffold> {
   Widget _selectedContent;
   GlobalKey<ScaffoldState> _key = new GlobalKey<ScaffoldState>();
   void onUpdate(DragUpdateDetails details) {
-    print(details.localPosition.direction);
     setState(() {
         if(details.localPosition.dx <= maximumDrawerWidth && details.localPosition.dx >= minimumDrawerWidth){
           drawerWidth = details.localPosition.dx;
@@ -37,15 +36,26 @@ class _ResponsiveScaffoldState extends State<ResponsiveScaffold> {
     });
   }
   void onDragEnd(DragEndDetails details){
-    print(dragEndAt);
-    if(dragEndAt > maximumDrawerWidth - 100){
-      setState(() {
-        drawerWidth = maximumDrawerWidth;
-      });
+    if(dragStartAt > maximumDrawerWidth - 100){
+      if(dragStartAt > dragEndAt){
+        setState(() {
+          drawerWidth = minimumDrawerWidth;
+        });
+      }else{
+        setState(() {
+          drawerWidth = maximumDrawerWidth;
+        });
+      }
     }else{
-      setState(() {
-        drawerWidth = minimumDrawerWidth;
-      });
+      if(dragEndAt > maximumDrawerWidth - 100){
+        setState(() {
+          drawerWidth = maximumDrawerWidth;
+        });
+      }else{
+        setState(() {
+          drawerWidth = minimumDrawerWidth;
+        });
+      }
     }
     setState(() {
       dragStartAt = minimumDrawerWidth;
@@ -55,7 +65,6 @@ class _ResponsiveScaffoldState extends State<ResponsiveScaffold> {
     setState(() {
       dragStartAt = details.localPosition.dx;
     });
-    print(dragStartAt);
   }
   @override
   void initState() {
@@ -79,12 +88,19 @@ class _ResponsiveScaffoldState extends State<ResponsiveScaffold> {
     return OrientationBuilder(
       builder: (context, orientation) {
         //check if tablet or not
-        if(MediaQuery.of(context).size.width > 900){
+        if(MediaQuery.of(context).size.width > 900 && MediaQuery.of(context).size.width < 1600){
           minimumDrawerWidth = 60;
           if(!_showDrawer){
-            _showDrawer = true;
             drawerWidth = minimumDrawerWidth;
             showDrawerText = false;
+            _showDrawer = true;
+          }
+        }else if(MediaQuery.of(context).size.width > 1600){
+          minimumDrawerWidth = 60;
+          if(_showDrawer){
+            _showDrawer = false;
+            drawerWidth = maximumDrawerWidth;
+            showDrawerText = true;
           }
         }else{
           minimumDrawerWidth = 0;
@@ -135,6 +151,7 @@ class _ResponsiveScaffoldState extends State<ResponsiveScaffold> {
                             for(var item in widget.drawerItems)...{
                               Container(
                                 width: double.infinity,
+                                color: item.content == _selectedContent ? Colors.grey[200] : Colors.transparent,
                                 height: 60,
                                 child: MaterialButton(
                                   padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -173,6 +190,7 @@ class _ResponsiveScaffoldState extends State<ResponsiveScaffold> {
                                 for(var sub_items in item.subItems)...{
                                   AnimatedContainer(
                                       width: double.infinity,
+                                      color: _selectedContent == sub_items.content ? Colors.grey[200] : Colors.transparent,
                                       height: _selectedDrawerItem == item ? 60 : 0,
                                       duration: Duration(milliseconds: 100 * (item.subItems.indexOf(sub_items) + 1)),
                                       child: MaterialButton(
@@ -287,6 +305,7 @@ class _ResponsiveScaffoldState extends State<ResponsiveScaffold> {
                               children: [
                                 for(var item in widget.drawerItems)...{
                                   Container(
+                                    color: _selectedContent == item.content ? Colors.grey[200] : Colors.transparent,
                                     width: double.infinity,
                                     height: 60,
                                     child: MaterialButton(
@@ -328,6 +347,7 @@ class _ResponsiveScaffoldState extends State<ResponsiveScaffold> {
                                     for(var sub_items in item.subItems)...{
                                       AnimatedContainer(
                                         width: double.infinity,
+                                        color: _selectedContent == sub_items.content ? Colors.grey[200] : Colors.transparent,
                                         height: _selectedDrawerItem == item ? 60 : 0,
                                         duration: Duration(milliseconds: 100 * (item.subItems.indexOf(sub_items) + 1)),
                                         child: MaterialButton(

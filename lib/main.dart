@@ -73,13 +73,13 @@ class _MyHomePageState extends State<MyHomePage> {
       drawerItems: [
         DrawerItem(icon: Icons.home, text: "Home",content: Container(color: Colors.red,)),
         DrawerItem(icon: Icons.dashboard, text: "Dashboard", content: Container(color: Colors.green,)),
-        DrawerItem(icon: Icons.settings, text: "Settings"),
+        DrawerItem(icon: Icons.settings, text: "Settings",content: Container(color: Colors.purple,)),
         DrawerItem(
             icon: Icons.person,
             text: "Clients",
             subItems: [
               SubDrawerItems(icon: Icons.details, title: "Details",content: Container(color: Colors.blue,)),
-              SubDrawerItems(icon: Icons.event, title: "Tasks")
+              SubDrawerItems(icon: Icons.event, title: "Tasks",content: Container(color: Colors.blueGrey,))
             ]
         )
       ],
