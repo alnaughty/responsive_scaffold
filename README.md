@@ -1,3 +1,7 @@
+# Installation
+ - run `flutter pub get`;
+ - run `cd (ios) or (macOs) -> pod install --repo-update` // this is necessary to achieve the latest dependencies using the latest push notification version 9
+
 # UI Template
 This is a flutter template in creating a vue-like platform with responsive feature (auto adjust and recreate design that suits the current platform)
 
