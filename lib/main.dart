@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:uitemplate/ui_pack/children/drawer_item.dart';
@@ -8,6 +9,7 @@ import 'package:uitemplate/ui_pack/responsive_scaffold.dart';
 
 void main() {
   runApp(MyApp());
+
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 }
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) {
@@ -36,6 +38,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Future<void> initializeApp() async {
+    await Firebase.initializeApp();
     await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
       alert: true,
       badge: true,

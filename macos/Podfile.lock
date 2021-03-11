@@ -4,7 +4,7 @@ PODS:
   - Firebase/Messaging (7.3.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 7.3.0)
-  - firebase_core (1.0.0):
+  - firebase_core (1.0.1):
     - Firebase/CoreOnly (~> 7.3.0)
     - FlutterMacOS
   - firebase_messaging (9.0.0):
@@ -93,7 +93,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Firebase: 26223c695fe322633274198cb19dca8cb7e54416
-  firebase_core: 8671465e832a0cab53896a6e7bec15c47f8a48e6
+  firebase_core: d73242f3840dbfff957d43f8cf06326a8e90d118
   firebase_messaging: 050190b9ff0bbe96bca15301eae629e0d9543f2e
   FirebaseCore: 4d3c72622ce0e2106aaa07bb4b2935ba2c370972
   FirebaseCoreDiagnostics: 179bf3831213451c8addd036aca7fcf5492ec154
