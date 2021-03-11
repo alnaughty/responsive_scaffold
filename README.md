@@ -1,16 +1,5 @@
-# uitemplate
+# UI Template
+This is a flutter template in creating a vue-like platform with responsive feature (auto adjust and recreate design that suits the current platform)
 
-A new Flutter application.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# web
+![alt text](https://github.com/alnaughty/responsive_scaffold/readme_assets/web_max.png/image.jpg)
