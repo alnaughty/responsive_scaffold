@@ -10,7 +10,6 @@ import 'package:uitemplate/ui_pack/responsive_scaffold.dart';
 void main() {
   runApp(MyApp());
 
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 }
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) {
   print("BACKGROUND HANDLER");
@@ -38,7 +37,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Future<void> initializeApp() async {
-    await Firebase.initializeApp();
     await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
       alert: true,
       badge: true,
@@ -46,23 +44,25 @@ class _MyHomePageState extends State<MyHomePage> {
     );
     NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
       alert: true,
-      announcement: false,
+      announcement: true,
       badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
+      carPlay: true,
+      criticalAlert: true,
+      provisional: true,
       sound: true,
     );
-    print("Notification Settings : $settings");
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    print("Notification Settings : ${settings.announcement}");
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print("Message : ${message.notification.title}");
       RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification?.android;
-      print("Message : ${notification.title}");
+
     });
     FirebaseMessaging.onMessageOpenedApp.listen((event) {
       print("MESSAGE OPENED :${event.notification.title}");
     });
-
+    await Firebase.initializeApp();
   }
   @override
   void initState() {
