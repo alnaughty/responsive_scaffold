@@ -1,22 +1,16 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:uitemplate/services/push_notification.dart';
 import 'package:uitemplate/ui_pack/children/drawer_item.dart';
 import 'package:uitemplate/ui_pack/children/sub_drawer_item.dart';
 import 'package:uitemplate/ui_pack/responsive_scaffold.dart';
 
 
 
-void main() {
+void main() async{
   runApp(MyApp());
-
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-}
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) {
-  print("BACKGROUND HANDLER");
+  PushNotification().init();
 }
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -37,36 +31,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Future<void> initializeApp() async {
-    await Firebase.initializeApp();
-    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
-    NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-    print("Notification Settings : $settings");
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification notification = message.notification;
-      AndroidNotification android = message.notification?.android;
-      print("Message : ${notification.title}");
-    });
-    FirebaseMessaging.onMessageOpenedApp.listen((event) {
-      print("MESSAGE OPENED :${event.notification.title}");
-    });
-
-  }
   @override
   void initState() {
-    initializeApp();
     super.initState();
   }
   @override
