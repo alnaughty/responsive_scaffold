@@ -22,7 +22,7 @@ This is a flutter template in creating a vue-like platform with responsive featu
 # Mobile
 ![alt text](https://github.com/alnaughty/responsive_scaffold/blob/master/readme_assets/mobile.png)
 
-#Tablet
+# Tablet
 ![alt text](https://github.com/alnaughty/responsive_scaffold/blob/master/readme_assets/tablet.png)
 
 # Desktop
