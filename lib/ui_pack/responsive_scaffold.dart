@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
 import 'package:uitemplate/ui_pack/children/drawer_item.dart';
 
@@ -87,6 +90,9 @@ class _ResponsiveScaffoldState extends State<ResponsiveScaffold> {
   Widget build(BuildContext context) {
     return OrientationBuilder(
       builder: (context, orientation) {
+        if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+          DesktopWindow.setMinWindowSize(Size(500,700));
+        }
         //check if tablet or not
         if(MediaQuery.of(context).size.width > 900 && MediaQuery.of(context).size.width < 1600){
           minimumDrawerWidth = 60;
@@ -156,6 +162,7 @@ class _ResponsiveScaffoldState extends State<ResponsiveScaffold> {
                                 child: MaterialButton(
                                   padding: const EdgeInsets.symmetric(horizontal: 25),
                                   onPressed: item.subItems != null && item.subItems.length > 0 ? (){
+//                                    Navigator.of(context).pop(null);
                                     setState(() {
                                       if(_selectedDrawerItem == item){
                                         _selectedDrawerItem = null;
@@ -164,6 +171,7 @@ class _ResponsiveScaffoldState extends State<ResponsiveScaffold> {
                                       }
                                     });
                                   } : item.content != null ? (){
+                                    Navigator.of(context).pop(null);
                                     setState(() {
                                       _selectedContent = item.content;
                                     });
@@ -195,6 +203,7 @@ class _ResponsiveScaffoldState extends State<ResponsiveScaffold> {
                                       duration: Duration(milliseconds: 100 * (item.subItems.indexOf(sub_items) + 1)),
                                       child: MaterialButton(
                                         onPressed: sub_items.content != null ? (){
+                                          Navigator.of(context).pop(null);
                                           setState(() {
                                             _selectedContent  = sub_items.content;
                                           });
@@ -239,6 +248,10 @@ class _ResponsiveScaffoldState extends State<ResponsiveScaffold> {
             onHorizontalDragUpdate: MediaQuery.of(context).size.width > 900 ? onUpdate : null,
             onHorizontalDragEnd: MediaQuery.of(context).size.width > 900 ? onDragEnd : null,
             child: Container(
+              constraints: BoxConstraints(
+                minWidth: 350.0,
+                minHeight: 400.0
+              ),
               width: double.infinity,
               height: MediaQuery.of(context).size.height,
               color: widget.backgroundColor,
@@ -282,7 +295,43 @@ class _ResponsiveScaffoldState extends State<ResponsiveScaffold> {
                             alignment: AlignmentDirectional.centerStart,
                             child: widget.title,
                           ),
-                        }
+                        },
+                        Spacer(),
+                        AnimatedContainer(
+                          margin: const EdgeInsets.only(right: 5),
+                          duration: Duration(milliseconds: 200),
+                          decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width > 900 ? 5 : 10000)
+                          ),
+                          width: MediaQuery.of(context).size.width > 900 ? MediaQuery.of(context).size.width/3 : 40,
+                          height: 40,
+                          child: MediaQuery.of(context).size.width > 900 ? TextField(
+
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.search),
+                              hintText: "Search",
+                              border: InputBorder.none
+                            ),
+                          ) : IconButton(icon: Icon(Icons.search), onPressed: (){}),
+                        ),
+                        MaterialButton(
+                          minWidth: 50,
+                          height: 50,
+                          onPressed: (){},
+                          padding: const EdgeInsets.all(0),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10000)
+                          ),
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.red
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -308,7 +357,36 @@ class _ResponsiveScaffoldState extends State<ResponsiveScaffold> {
                                     color: _selectedContent == item.content ? Colors.grey[200] : Colors.transparent,
                                     width: double.infinity,
                                     height: 60,
-                                    child: MaterialButton(
+                                    child: item.subItems != null && item.subItems.length > 0 && (!showDrawerText) ? PopupMenuButton(
+
+                                      icon: Icon(item.icon,),
+                                      onSelected: (value){
+                                        setState(() {
+                                          _selectedContent = value;
+                                        });
+                                      },
+                                      offset: Offset(60,0),
+                                      itemBuilder: (_) => [
+                                        for(var sub_items in item.subItems)...{
+                                          PopupMenuItem(
+                                            value: sub_items.content,
+                                            child: Row(
+                                              children: [
+                                                Icon(sub_items.icon),
+                                                if(sub_items.title != null)...{
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Expanded(
+                                                    child: Text(sub_items.title),
+                                                  )
+                                                }
+                                              ],
+                                            ),
+                                          )
+                                        }
+                                      ],
+                                    ) : MaterialButton(
                                       padding: const EdgeInsets.symmetric(horizontal: 25),
                                       onPressed: item.subItems != null && item.subItems.length > 0 ? (){
                                         setState(() {
@@ -336,6 +414,7 @@ class _ResponsiveScaffoldState extends State<ResponsiveScaffold> {
                                               child: Text("${item.text}"),
                                             )
                                           },
+                                          Spacer(),
                                           if((item.subItems != null && item.subItems.length > 0) && showDrawerText)...{
                                             Icon(_selectedDrawerItem == item ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down)
                                           }

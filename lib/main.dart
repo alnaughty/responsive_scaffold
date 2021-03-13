@@ -1,14 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:uitemplate/services/push_notification.dart';
-import 'package:uitemplate/ui_pack/children/drawer_item.dart';
-import 'package:uitemplate/ui_pack/children/sub_drawer_item.dart';
-import 'package:uitemplate/ui_pack/responsive_scaffold.dart';
-
-
+import 'package:uitemplate/pack/main_pack.dart';
 
 void main() async{
   runApp(MyApp());
   PushNotification().init();
+
 }
 class MyApp extends StatelessWidget {
   @override
@@ -37,8 +32,24 @@ class _MyHomePageState extends State<MyHomePage> {
   }
   @override
   Widget build(BuildContext context) {
+
     return ResponsiveScaffold(
-      title: Text("TEST TITLE"),
+      title: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.grey[300]
+            ),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Text("Zeus Template")
+        ],
+      ),
       drawerItems: [
         DrawerItem(icon: Icons.home, text: "Home",content: Container(color: Colors.red,)),
         DrawerItem(icon: Icons.dashboard, text: "Dashboard", content: Container(color: Colors.green,)),
