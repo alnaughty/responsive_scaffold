@@ -43,10 +43,11 @@ class PushNotification {
 
     print("Notification Settings : ${settings.announcement}");
     this.listen();
-    await Firebase.initializeApp();
+
 
   }
   init() async {
+    await Firebase.initializeApp();
     print("Token : ${await fcmToken}");
     this.initialize();
   }
