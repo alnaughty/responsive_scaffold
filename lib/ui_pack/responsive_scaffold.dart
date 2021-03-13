@@ -357,7 +357,36 @@ class _ResponsiveScaffoldState extends State<ResponsiveScaffold> {
                                     color: _selectedContent == item.content ? Colors.grey[200] : Colors.transparent,
                                     width: double.infinity,
                                     height: 60,
-                                    child: MaterialButton(
+                                    child: item.subItems != null && item.subItems.length > 0 && (!showDrawerText) ? PopupMenuButton(
+
+                                      icon: Icon(item.icon,),
+                                      onSelected: (value){
+                                        setState(() {
+                                          _selectedContent = value;
+                                        });
+                                      },
+                                      offset: Offset(60,0),
+                                      itemBuilder: (_) => [
+                                        for(var sub_items in item.subItems)...{
+                                          PopupMenuItem(
+                                            value: sub_items.content,
+                                            child: Row(
+                                              children: [
+                                                Icon(sub_items.icon),
+                                                if(sub_items.title != null)...{
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Expanded(
+                                                    child: Text(sub_items.title),
+                                                  )
+                                                }
+                                              ],
+                                            ),
+                                          )
+                                        }
+                                      ],
+                                    ) : MaterialButton(
                                       padding: const EdgeInsets.symmetric(horizontal: 25),
                                       onPressed: item.subItems != null && item.subItems.length > 0 ? (){
                                         setState(() {
@@ -385,6 +414,7 @@ class _ResponsiveScaffoldState extends State<ResponsiveScaffold> {
                                               child: Text("${item.text}"),
                                             )
                                           },
+                                          Spacer(),
                                           if((item.subItems != null && item.subItems.length > 0) && showDrawerText)...{
                                             Icon(_selectedDrawerItem == item ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down)
                                           }
