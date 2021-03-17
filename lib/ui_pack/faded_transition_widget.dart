@@ -4,8 +4,8 @@ import 'package:simple_animations/simple_animations.dart';
 class AnimatedWidgetX extends StatelessWidget {
   final Widget child;
   final double delay;
-  Duration duration = Duration(milliseconds: 500);
-  AnimatedWidgetX({@required this.child, @required this.delay, this.duration});
+  final Duration duration;
+  AnimatedWidgetX({@required this.child, @required this.delay,@required this.duration});
   @override
   Widget build(BuildContext context) {
     final tween = MultiTrackTween([

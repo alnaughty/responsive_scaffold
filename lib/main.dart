@@ -32,7 +32,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
   @override
   Widget build(BuildContext context) {
-
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      DesktopWindow.setMinWindowSize(Size(500,700));
+    }
     return ResponsiveScaffold(
       title: Row(
         children: [

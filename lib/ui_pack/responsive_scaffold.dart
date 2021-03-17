@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:uitemplate/ui_pack/children/drawer_item.dart';
+import 'package:uitemplate/ui_pack/login_page.dart';
 
 class ResponsiveScaffold extends StatefulWidget {
   BuildContext context;
@@ -318,7 +320,10 @@ class _ResponsiveScaffoldState extends State<ResponsiveScaffold> {
                         MaterialButton(
                           minWidth: 50,
                           height: 50,
-                          onPressed: (){},
+                          onPressed: ()=> Navigator.push(context, PageTransition(
+                            child: LoginPage(),
+                            type: PageTransitionType.rightToLeftWithFade
+                          )),
                           padding: const EdgeInsets.all(0),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10000)
