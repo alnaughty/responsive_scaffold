@@ -17,7 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    final bool showContent = Platform.isWindows || Platform.isLinux || Platform.isMacOS;
+    final bool showContent = (Platform.isWindows || Platform.isLinux || Platform.isMacOS) && size.width > 900;
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       DesktopWindow.setMinWindowSize(Size(500,700));
     }
@@ -35,8 +35,7 @@ class _LoginPageState extends State<LoginPage> {
               )
             },
             Container(
-              key: _key,
-              width: showContent ? 500  : size.width,
+              width: showContent ? size.width/3 : size.width,
               height: size.height,
               padding: const EdgeInsets.all(20),
               child: Column(
